@@ -1,0 +1,5 @@
+set routing-options autonomous-system 65000
+set protocols bgp group overlay type internal
+set protocols bgp group overlay local-address 10.0.0.21
+set protocols bgp group overlay family evpn signaling
+set protocols bgp group overlay neighbor 10.0.0.22

@@ -70,22 +70,31 @@ graph LR
 Then: [`verify.md`](verify.md) (full checklist) and
 [`break-it.md`](break-it.md) (deliberate failures).
 
-## Two ways to run it
+## Three ways to run it
 
 ```bash
-# Learning path — bare fabric, type each layer yourself:
-./scripts/deploy.sh 01-ospf-ibgp
-#   ... then work through steps/01 → 05
+./scripts/deploy.sh 01-ospf-ibgp          # 1. boot the bare fabric (~5-8 min/node)
 
-# Reset button — push the full working config at once:
-./scripts/switch.sh 01-ospf-ibgp
+# then EITHER learn by hand — type each layer from steps/01 → 05 yourself,
+# OR drive it with the scripts:
+
+./scripts/apply.sh 01-ospf-ibgp 02        # 2. apply ONE step at a time (per-step)
+./scripts/apply.sh 01-ospf-ibgp all       #    ...or all steps 01→05 in order
+
+./scripts/switch.sh 01-ospf-ibgp          # 3. push the whole config at once
 ```
 
-> `configs/*.conf` (the full working configs) and `steps/*.md` (the by-hand
-> layers) describe the **same** end state — stacking the steps equals the
-> config file.
+Sources of truth, all describing the **same** end state:
+- `apply/<NN>-<node>.set` — per-step snippets (`apply.sh` loads these)
+- `configs/<node>.conf` — the full per-node config (`switch.sh` loads these; =
+  the node's step snippets concatenated)
+- `steps/*.md` — the human guide for typing it by hand
+
+Host IPs (Step 5b) are set on the Linux hosts, not Junos — see
+[steps/05](steps/05-services-verify.md) or the hint `apply.sh` prints.
 
 ## Status
 
-🏗️ Scaffold in place. Step content + configs are stubs — filled in one layer
-at a time, each validated on a live fabric before the next is written.
+✅ **Validated end-to-end on vJunos-switch 23.2R1.14** (2026-07-19). Real
+configs, confirmed `show` output, and per-step apply scripts are in place. See
+[`LESSONS.md`](LESSONS.md) for what the live build taught us.

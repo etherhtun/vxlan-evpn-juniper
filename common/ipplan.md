@@ -53,15 +53,31 @@ Numbering: `10.10.<link-id>.0/31`. Spine side always `.0`, leaf side `.1`.
 > `ethN` names that containerlab presents. *Inside* vJunos those map to Junos
 > interface names. Configs and `steps/` use the **Junos** names.
 >
-> NOTE: the exact `ethN → xe/et/ge` mapping is confirmed on first deploy with
-> `show interfaces terse` and corrected here if needed.
+> ✅ **CONFIRMED on vJunos-switch 23.2R1.14** (live deploy 2026-07-19). Note the
+> **+1 offset**: clab `ethN` → `ge-0/0/(N-1)`.
 
-| clab endpoint | Junos interface (expected) | Purpose |
-|---------------|----------------------------|---------|
-| `eth1`        | `et-0/0/0`                 | uplink to spine1 (leaves) / to leaf1 (spines) |
-| `eth2`        | `et-0/0/1`                 | uplink to spine2 (leaves) / to leaf2 (spines) |
-| `eth3`        | `xe-0/0/2` / `ge-0/0/2`    | host-facing access port (leaves) |
-| `eth4`        | `et-0/0/3`                 | reserved (peer-link, later labs) |
+| clab endpoint | Junos interface | Purpose |
+|---------------|-----------------|---------|
+| `eth1`        | `ge-0/0/0`      | uplink to spine1 (leaves) / to leaf1 (spines) |
+| `eth2`        | `ge-0/0/1`      | uplink to spine2 (leaves) / to leaf2 (spines) |
+| `eth3`        | `ge-0/0/2`      | host-facing access port (leaves) |
+| `eth4`        | `ge-0/0/3`      | reserved (peer-link, later labs) |
+
+> The `ge-0/0/N.16386` sub-units seen in `show interfaces terse` are vJunos
+> internal — ignore them.
+
+## Management (fxp0) — heads-up
+
+vJunos management (`fxp0`) sits on **10.0.0.0/24**, which *overlaps* the loopback
+range below. They live in **separate routing instances** (`mgmt_junos.inet.0`
+for fxp0, `inet.0` for loopbacks), so there is no functional conflict — but it
+is a smell. If it ever causes confusion, move loopbacks to e.g. `10.255.0.X/32`
+or set a non-overlapping `mgmt` subnet in the topology.
+
+## Credentials
+
+Confirmed containerlab default for `juniper_vjunosswitch`:
+**user `admin` / password `admin@123`** (matches `LAB_USER`/`LAB_PASS` in the scripts).
 
 ## Host-facing ports (leaves only)
 

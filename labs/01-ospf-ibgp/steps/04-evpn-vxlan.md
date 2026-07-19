@@ -24,8 +24,8 @@ and carries VNI 10100. A host frame entering leaf1 in VLAN 100 gets wrapped in
 VXLAN, crosses the underlay to leaf2's loopback, is unwrapped, and delivered in
 VLAN 100 — the two hosts believe they share one L2 segment.
 
-## Config (draft — validate on live fabric)
-On **leaf1** (leaf2 mirrors with its own RD):
+## Config ✅ (validated) — leaves only; RD differs per leaf
+On **leaf1** (leaf2 mirrors with RD `10.0.0.22:1`):
 ```
 set protocols evpn encapsulation vxlan
 set protocols evpn extended-vni-list all
@@ -35,14 +35,25 @@ set switch-options vrf-target target:65000:1
 set vlans v100 vlan-id 100
 set vlans v100 vxlan vni 10100
 ```
+Or: `./scripts/apply.sh 01-ospf-ibgp 04`
 
-## Verify
+## ⚠️ Key Junos behavior — no Type-3 yet, and that's correct
+After committing this, `show route table bgp.evpn.0` is **still empty** and
+`show bgp summary` shows the EVPN instance (`default-switch.evpn.0`) but 0 routes.
+
+**This is not a bug.** Unlike Cisco NX-OS (which advertises the VNI as soon as
+it's defined), **Junos only originates the Type-3 (IMET) route once the VLAN has
+an operationally-up member interface.** VLAN 100 has no ports in it yet — so
+nothing to flood to, so no advertisement. The IMET route appears in **Step 5**,
+the moment the access port comes up.
+
+## Verify (what to expect *now*)
 ```
-show evpn database                          → local VNI 10100 present
-show route table bgp.evpn.0                 → Type-3 route learned from leaf2
-show ethernet-switching vxlan-tunnel-end-point remote
-                                            → tunnel to leaf2 loopback, up
+show configuration vlans          → v100 + vxlan vni 10100 present
+show configuration switch-options → vtep-source-interface / RD / vrf-target
+show bgp summary                  → default-switch.evpn.0 listed, 0/0/0/0
 ```
 
 ## Checkpoint
-Type-3 route from the peer + tunnel up → proceed to Step 5.
+Config committed on both leaves + `default-switch.evpn.0` appears in
+`show bgp summary` → proceed to Step 5 (where it all lights up).

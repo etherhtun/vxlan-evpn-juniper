@@ -6,21 +6,18 @@
 # parallel, then verifies. This is the "reset button" — it is NOT the learning
 # path (for that, follow labs/<lab>/steps/ by hand).
 #
-# ── Junos vs the Cisco reference ───────────────────────────────────────────
-# The NX-OS original pushed config as a MERGE (stale config from a higher
-# session survived a downgrade). Junos gives us a clean atomic replace:
-#   configure exclusive; load override terminal; <config>; commit and-quit
-# So every switch.sh is a guaranteed clean state — no leftovers.
+# ── How it works ───────────────────────────────────────────────────────────
+# configs/*.conf are set-format (the same commands you'd type by hand, = the
+# concatenation of apply/*.set). We push them with:
+#   configure exclusive; load set terminal; <set lines>; commit and-quit
+# load set is ADDITIVE, so run switch.sh on a freshly-deployed fabric (or
+# reset.sh first) for a clean result.
 #
-# configs/*.conf are therefore stored in Junos HIERARCHICAL (curly-brace)
-# format, suitable for `load override`. (The steps/ docs teach the same thing
-# in `set` format, which is friendlier to type by hand.)
+# For step-by-step application instead of the whole config at once, use
+# ./scripts/apply.sh <lab> <step>.
 #
-# NOTE (validate on first real deploy):
-#   - LAB_USER / LAB_PASS below must match the vJunos lab user created in the
-#     topology's startup-config. Defaults are a guess.
-#   - Confirm `load override terminal` + Ctrl-D over `ssh -tt` behaves; if not,
-#     fall back to scp'ing the file and `load override <path>`.
+# Auth: LAB_USER/LAB_PASS default to admin/admin@123 (confirmed containerlab
+# default for juniper_vjunosswitch).
 
 set -euo pipefail
 
@@ -106,8 +103,8 @@ push_cfg() {
   echo "[$node] BEGIN push" >> "$PUSH_LOG"
   {
     echo "configure exclusive"
-    echo "load override terminal"
-    cat "$cfg"
+    echo "load set terminal"
+    grep '^set ' "$cfg"           # set-format lines only (skip ## comments)
     printf '\004'                 # Ctrl-D ends the terminal load
     echo "commit and-quit"
   } | sshpass -p "$LAB_PASS" ssh -tt \

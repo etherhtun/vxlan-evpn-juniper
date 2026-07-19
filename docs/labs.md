@@ -9,10 +9,10 @@ guide, verification checklist, and break-it exercises.
 > topology/config files). Once lab 01 is validated on live hardware, these get
 > pulled into the site directly.
 
-## Lab 01 — OSPF underlay + iBGP-EVPN (full mesh) 🏗️
+## Lab 01 — OSPF underlay + iBGP-EVPN (full mesh) ✅
 
-The foundational lab. Build a working VXLAN-EVPN fabric from bare vJunos nodes,
-one layer at a time.
+The foundational lab — **validated end-to-end on vJunos-switch 23.2R1.14.** Build
+a working VXLAN-EVPN fabric from bare vJunos nodes, one layer at a time.
 
 | Resource | Link |
 |----------|------|
@@ -24,6 +24,13 @@ one layer at a time.
 | Step 5 — Services | [05-services-verify.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/05-services-verify.md) |
 | Verify checklist | [verify.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/verify.md) |
 | Break-it exercises | [break-it.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/break-it.md) |
+| **Lessons from the live build** | [LESSONS.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/LESSONS.md) |
+
+**Run it with scripts** (per-step or all at once):
+```bash
+./scripts/apply.sh 01-ospf-ibgp 02     # one step
+./scripts/apply.sh 01-ospf-ibgp all    # all steps 01→05
+```
 
 ## Planned
 
