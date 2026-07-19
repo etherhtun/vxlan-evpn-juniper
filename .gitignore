@@ -1,0 +1,33 @@
+# ── Juniper images & licences (NEVER commit — licence violation) ──
+*.qcow2
+*.tar
+*.tgz
+*.vmdk
+*.lic
+license*.txt
+
+# ── Secrets ──
+*.pem
+*.key
+*-sa.json
+service-account*.json
+.env
+
+# ── containerlab runtime artifacts ──
+clab-*/
+*.clab.yml.bak
+.clab/
+authorized_keys
+ansible-inventory.yml
+topology-data.json
+
+# ── capture output (large; regenerate as needed) ──
+scripts/_push.log
+
+# ── OS / editor ──
+.DS_Store
+*.swp
+.vscode/
+
+# ── MkDocs build output ──
+site/
