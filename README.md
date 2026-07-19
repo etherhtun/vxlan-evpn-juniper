@@ -8,6 +8,10 @@ A hands-on, layer-by-layer learning path for building VXLAN-EVPN fabrics on
 > overlay, then services — because that is the order in which it actually
 > becomes real.
 
+**📖 [Read the full docs](https://etherhtun.github.io/vxlan-evpn-juniper/)** —
+hosted on GitHub Pages, searchable, with inline code snippets and verification
+checklists.
+
 Inspired by the Cisco-Nexus [`vxlan-evpn-zero-to-hero`](https://github.com/atr399/vxlan-evpn-zero-to-hero)
 curriculum, re-built for Junos and organised around *routing-design variants*
 rather than feature add-ons.

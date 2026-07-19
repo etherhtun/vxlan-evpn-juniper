@@ -1,0 +1,85 @@
+site_name: VXLAN-EVPN on Juniper
+site_description: Hands-on, layer-by-layer learning path for VXLAN-EVPN on Juniper vJunos-switch
+site_author: etherhtun
+repo_url: https://github.com/etherhtun/vxlan-evpn-juniper
+repo_name: vxlan-evpn-juniper
+edit_uri: edit/main/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Quickstart:
+    - Introduction: quickstart/intro.md
+  - Host Setup:
+    - GCP Instance: host-setup/00-gcp-instance.md
+    - Docker & containerlab: host-setup/01-containerlab.md
+  - Concepts:
+    - EVPN-VXLAN Primer: concepts/evpn-vxlan-primer.md
+    - Route Types: concepts/route-types.md
+    - Verification Cheatsheet: concepts/verify-cheatsheet.md
+  - Lab 01 (OSPF+iBGP):
+    - Overview: ../labs/01-ospf-ibgp/README.md
+    - Step 1 - Fabric: ../labs/01-ospf-ibgp/steps/01-fabric.md
+    - Step 2 - Underlay OSPF: ../labs/01-ospf-ibgp/steps/02-underlay-ospf.md
+    - Step 3 - Overlay iBGP: ../labs/01-ospf-ibgp/steps/03-overlay-ibgp.md
+    - Step 4 - EVPN+VXLAN: ../labs/01-ospf-ibgp/steps/04-evpn-vxlan.md
+    - Step 5 - Services: ../labs/01-ospf-ibgp/steps/05-services-verify.md
+    - Verify: ../labs/01-ospf-ibgp/verify.md
+    - Break-it: ../labs/01-ospf-ibgp/break-it.md
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_underscores: true
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:pymdownx.emoji.twemoji
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - tables
+  - toc:
+      permalink: true
