@@ -23,6 +23,35 @@ Four routing-design variants, all on the same 2-spine × 2-leaf topology:
 
 Each lab is built layer-by-layer through 5 steps. Verify before you move on.
 
+## The topology
+
+All labs share the same 2 spine × 2 leaf fabric — only the routing design
+changes between them.
+
+```mermaid
+graph TB
+    S1["spine1<br/>lo0 10.0.0.11"]
+    S2["spine2<br/>lo0 10.0.0.12"]
+    L1["leaf1 · VTEP<br/>lo0 10.0.0.21"]
+    L2["leaf2 · VTEP<br/>lo0 10.0.0.22"]
+    H1["host1<br/>10.100.10.10"]
+    H2["host2<br/>10.100.10.11"]
+
+    S1 ---|"10.10.1.0/31"| L1
+    S1 ---|"10.10.2.0/31"| L2
+    S2 ---|"10.10.3.0/31"| L1
+    S2 ---|"10.10.4.0/31"| L2
+    L1 ---|"VLAN 100"| H1
+    L2 ---|"VLAN 100"| H2
+
+    classDef spine fill:#e3f2fd,stroke:#1565c0,color:#0d47a1;
+    classDef leaf  fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20;
+    classDef host  fill:#fff3e0,stroke:#ef6c00,color:#e65100;
+    class S1,S2 spine;
+    class L1,L2 leaf;
+    class H1,H2 host;
+```
+
 ---
 
 ## Quick start

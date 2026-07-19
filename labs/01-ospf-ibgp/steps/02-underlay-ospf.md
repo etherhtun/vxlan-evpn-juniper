@@ -6,6 +6,22 @@ other loopback.** Nothing about VXLAN or EVPN yet — just plain IP reachability
 so the VXLAN tunnels (built later) have somewhere to land. All fabric links
 join OSPF area 0 as point-to-point; loopbacks are advertised passively.
 
+```mermaid
+graph TB
+    S1["spine1<br/>10.0.0.11"]
+    S2["spine2<br/>10.0.0.12"]
+    L1["leaf1<br/>10.0.0.21"]
+    L2["leaf2<br/>10.0.0.22"]
+    S1 ===|OSPF area 0| L1
+    S1 ===|OSPF area 0| L2
+    S2 ===|OSPF area 0| L1
+    S2 ===|OSPF area 0| L2
+    L1 -. "goal: lo0 ↔ lo0 reachable" .- L2
+```
+
+Every fabric link runs OSPF (solid). The dashed line is the *outcome* we're
+after: leaf1's loopback can reach leaf2's loopback, via either spine.
+
 ## Config (draft — validate on live fabric)
 On **leaf1**:
 ```
