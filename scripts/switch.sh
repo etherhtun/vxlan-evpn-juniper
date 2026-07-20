@@ -19,7 +19,8 @@
 # Auth: LAB_USER/LAB_PASS default to admin/admin@123 (confirmed containerlab
 # default for juniper_vjunosswitch).
 
-set -euo pipefail
+# No `set -e`: Junos CLI over ssh -tt returns non-zero routinely; handled per node.
+set -uo pipefail
 
 LAB="${1:-}"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"

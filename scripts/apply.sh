@@ -10,13 +10,13 @@
 #   ./scripts/apply.sh 01-ospf-ibgp 03     # Step 3 (overlay) on leaf1+leaf2
 #   ./scripts/apply.sh 01-ospf-ibgp all    # Steps 01→05 in order (full build)
 #
-# Snippets are `set` format and loaded with `load set terminal` (additive), so
+# Snippets are `set` format, loaded with `load set terminal` (additive), so
 # steps stack. For a guaranteed clean slate, use ./scripts/reset.sh first.
 #
-# Host IP setup (Step 5b) is NOT Junos config — see the printed hint or the
-# lab's steps/05-services-verify.md.
+# NOTE: no `set -e` here on purpose — Junos CLI over `ssh -tt` returns non-zero
+# routinely, and we handle failures explicitly per node.
 
-set -euo pipefail
+set -uo pipefail
 
 LAB="${1:-}"
 STEP="${2:-}"
@@ -41,13 +41,34 @@ command -v sshpass >/dev/null 2>&1 || { echo "ERROR: install sshpass (sudo apt i
 
 PREFIX="$(grep -m1 '^name:' "$TOPOLOGY" | awk '{print $2}')"
 
+ssh_node() {   # ssh_node <container> <remote-cli-command>
+  sshpass -p "$LAB_PASS" ssh -tt \
+    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    -o LogLevel=ERROR -o ConnectTimeout=10 \
+    -o PreferredAuthentications=password "${LAB_USER}@$1" "$2" 2>&1
+}
+
+# Wait until the node's Junos CLI answers (post-reset boot can take minutes).
+wait_cli() {
+  local c="$1" i
+  for i in $(seq 1 40); do
+    if ssh_node "$c" "show system uptime" 2>/dev/null | grep -qi 'uptime\|current time'; then
+      return 0
+    fi
+    sleep 3
+  done
+  return 1
+}
+
 # Push one node's snippet: load set terminal + commit.
 push() {
   local node="$1" file="$2"
   local c="clab-${PREFIX}-${node}"
   echo -n "    $node ... "
-  if ! docker inspect "$c" >/dev/null 2>&1; then echo "container not found"; return 1; fi
-  local out
+  if ! docker inspect "$c" >/dev/null 2>&1; then echo "container not found"; return 0; fi
+  if ! wait_cli "$c"; then echo "CLI not ready (boot still in progress?)"; return 0; fi
+
+  local out=""
   out=$( { echo "configure exclusive"
            echo "load set terminal"
            cat "$file"
@@ -55,12 +76,16 @@ push() {
            echo "commit and-quit"
          } | sshpass -p "$LAB_PASS" ssh -tt \
                -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-               -o LogLevel=ERROR -o ConnectTimeout=10 "${LAB_USER}@${c}" 2>&1 )
-  if echo "$out" | grep -qiE 'commit complete|commit-and-quit'; then
+               -o LogLevel=ERROR -o ConnectTimeout=10 \
+               -o PreferredAuthentications=password "${LAB_USER}@${c}" 2>&1 ) || true
+
+  if echo "$out" | grep -qi 'commit complete'; then
     echo "committed"
+  elif echo "$out" | grep -qi 'commit.*not needed\|no changes'; then
+    echo "no change (already applied)"
   else
     echo "CHECK — no 'commit complete' seen:"
-    echo "$out" | sed 's/^/        /' | tail -8
+    echo "$out" | sed 's/^/        /' | tail -10
   fi
 }
 
@@ -77,7 +102,6 @@ apply_step() {
 }
 
 if [ "$STEP" = "all" ]; then
-  # Discover step numbers present, in order.
   STEPS=$(ls "$APPLY_DIR"/*.set 2>/dev/null | sed -E 's#.*/([0-9]+)-.*#\1#' | sort -u)
   for nn in $STEPS; do apply_step "$nn"; done
 else
