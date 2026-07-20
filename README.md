@@ -67,7 +67,7 @@ layer* — you never debug the whole stack at once.
 #   2. Install docker + containerlab, load the vJunos-switch image
 
 ./scripts/deploy.sh 01-ospf-ibgp       # boot the fabric (vJunos ~5-8 min/node)
-# ... follow labs/01-ospf-ibgp/steps/ by hand, OR:
+# ... follow labs/01-ospf-ibgp/README.md by hand, OR:
 ./scripts/apply.sh  01-ospf-ibgp all   # build every step with one command
 ./scripts/switch.sh 01-ospf-ibgp       # (alt) push the full working config
 ./scripts/reset.sh  01-ospf-ibgp       # destroy + redeploy clean
@@ -85,11 +85,14 @@ docker ps | grep clab                  # confirm nothing is left running
 (Under the hood that runs `containerlab destroy -t <topology> --cleanup`; add
 `sudo` if you hit a permissions error.)
 
-> **Note — all labs share one topology name** (`vxlan-evpn-jnpr`), so they use the
-> same 4 containers and only **one lab runs at a time**. You don't need to wipe
-> before switching labs: `./scripts/reset.sh <other-lab>` destroys the current
-> fabric and redeploys the new one in a single step. For example, to move from
-> lab 01 to lab 02: `./scripts/reset.sh 02-ospf-ibgp-rr`.
+> **Each lab has its own independent fabric** (distinct container names, e.g.
+> `clab-evpn-fullmesh-*` for lab 01, `clab-evpn-rr-*` for lab 02) — so labs never
+> conflict. But a 2×2 vJunos fabric needs ~16 GB RAM, so **run only one lab at a
+> time.** To switch labs, wipe the current one first, then deploy the next:
+> ```bash
+> ./scripts/destroy.sh 01-ospf-ibgp        # wipe the current lab
+> ./scripts/deploy.sh  02-ospf-ibgp-rr     # boot the next one
+> ```
 
 **Stop the GCP VM** when you're done for the day (the fabric does not survive a
 VM stop/start — you re-run `deploy.sh` after starting it again):

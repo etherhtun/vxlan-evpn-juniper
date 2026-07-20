@@ -146,16 +146,12 @@ echo "============================================================"
 echo "Switched to lab $LAB in $(( $(date +%s) - START ))s"
 echo "============================================================"
 
-# Per-lab host setup hints (containerlab Linux hosts).
-case "$LAB" in
-  01-ospf-ibgp)
-    cat <<'HOSTS'
+# Host setup hint (containerlab Linux hosts) — prefix resolved from the topology.
+cat <<HOSTS
 
 Host setup (VLAN 100 / 10.100.10.0/24):
-  docker exec clab-PREFIX-host1 sh -c "ip addr flush dev eth1; ip addr add 10.100.10.10/24 dev eth1; ip link set eth1 up"
-  docker exec clab-PREFIX-host2 sh -c "ip addr flush dev eth1; ip addr add 10.100.10.11/24 dev eth1; ip link set eth1 up"
+  docker exec clab-${PREFIX}-host1 sh -c "ip addr flush dev eth1; ip addr add 10.100.10.10/24 dev eth1; ip link set eth1 up"
+  docker exec clab-${PREFIX}-host2 sh -c "ip addr flush dev eth1; ip addr add 10.100.10.11/24 dev eth1; ip link set eth1 up"
 
-Test:  docker exec clab-PREFIX-host1 ping -c 3 10.100.10.11
+Test:  docker exec clab-${PREFIX}-host1 ping -c 3 10.100.10.11
 HOSTS
-    ;;
-esac

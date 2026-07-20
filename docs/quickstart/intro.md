@@ -39,7 +39,7 @@ This boots the bare 2×2 fabric (no configs yet). **Wait 5–8 minutes** for nod
 
 In another terminal, watch boot progress:
 ```bash
-docker logs -f clab-vxlan-evpn-jnpr-spine1
+docker logs -f clab-evpn-fullmesh-spine1
 ```
 
 ---
@@ -47,15 +47,14 @@ docker logs -f clab-vxlan-evpn-jnpr-spine1
 ## Choose your path
 
 ### Path 1: Learn by hand (recommended)
-Follow the lab steps and type the config yourself. This is how you actually learn.
+Follow the lab guide and type the config yourself. This is how you actually learn.
 
-1. Read [Lab 01 Step 1 — Fabric](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/01-fabric.md)
-2. SSH into a node and apply the config:
+1. Open the complete guide: [Lab 01 README](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md)
+2. SSH into a node and apply each step's config:
    ```bash
-   ssh admin@clab-vxlan-evpn-jnpr-leaf1
+   ssh admin@clab-evpn-fullmesh-leaf1     # password admin@123
    ```
-3. Run the verify commands from the step
-4. Move to the next step
+3. Run the step's verify command, confirm the checkpoint, move to the next step
 
 ### Path 2: Push the full config at once
 Skip the hand-typing and deploy the working config:

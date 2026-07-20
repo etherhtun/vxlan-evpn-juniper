@@ -1,53 +1,35 @@
 # Labs
 
-The labs live in the [`labs/`](https://github.com/etherhtun/vxlan-evpn-juniper/tree/main/labs)
-directory of the repo — alongside their topology files, configs, and scripts, so
-everything for a lab is in one place. Each lab folder has its own step-by-step
-guide, verification checklist, and break-it exercises.
+Each lab is a **complete, self-contained guide** — one README you read top to
+bottom (overview → every step → verify → break-it). Each lab also has its **own
+independent fabric** (distinct container names), so they never conflict. Guides
+live on GitHub, next to the runnable topology/config/scripts.
 
-> Lab step content is served from GitHub for now (it sits next to the runnable
-> topology/config files). Once lab 01 is validated on live hardware, these get
-> pulled into the site directly.
+> **Run one lab at a time** — a 2×2 vJunos fabric needs ~16 GB RAM. To switch
+> labs, wipe the current one first (`./scripts/destroy.sh <lab>`).
 
 ## Lab 01 — OSPF underlay + iBGP-EVPN (full mesh) ✅
 
-The foundational lab — **validated end-to-end on vJunos-switch 23.2R1.14.** Build
-a working VXLAN-EVPN fabric from bare vJunos nodes, one layer at a time.
+The **foundational** lab (validated on vJunos-switch 23.2R1.14). The simplest
+overlay — leaves peer directly — so you see EVPN in its clearest form. Fabric:
+`clab-evpn-fullmesh-*`.
 
-| Resource | Link |
-|----------|------|
-| Overview | [labs/01-ospf-ibgp/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md) |
-| Step 1 — Fabric | [01-fabric.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/01-fabric.md) |
-| Step 2 — Underlay OSPF | [02-underlay-ospf.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/02-underlay-ospf.md) |
-| Step 3 — Overlay iBGP | [03-overlay-ibgp.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/03-overlay-ibgp.md) |
-| Step 4 — EVPN + VXLAN | [04-evpn-vxlan.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/04-evpn-vxlan.md) |
-| Step 5 — Services | [05-services-verify.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/steps/05-services-verify.md) |
-| Verify checklist | [verify.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/verify.md) |
-| Break-it exercises | [break-it.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/break-it.md) |
-| **Lessons from the live build** | [LESSONS.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/LESSONS.md) |
+👉 **[Complete guide → labs/01-ospf-ibgp/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md)**
 
-**Run it with scripts** (per-step or all at once):
 ```bash
-./scripts/apply.sh 01-ospf-ibgp 02     # one step
-./scripts/apply.sh 01-ospf-ibgp all    # all steps 01→05
+./scripts/deploy.sh 01-ospf-ibgp && ./scripts/apply.sh 01-ospf-ibgp all
 ```
 
-## Lab 02 — OSPF underlay + iBGP-EVPN with spine route-reflectors ⭐ (production)
+## Lab 02 — OSPF underlay + iBGP-EVPN, spine route-reflectors ⭐ (production)
 
-Same fabric, **production overlay**: leaves peer only to the spines; spines
-reflect EVPN routes (control-plane only — **not** VTEPs). This is what you'd
-actually deploy — full-mesh (lab 01) doesn't scale past a few leaves.
+The **production** overlay: leaves peer only to the spines; spines reflect EVPN
+routes (control-plane only — **not** VTEPs). Full-mesh (lab 01) doesn't scale
+past a few leaves; this does. Fabric: `clab-evpn-rr-*`.
 
-| Resource | Link |
-|----------|------|
-| Overview | [labs/02-ospf-ibgp-rr/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/README.md) |
-| Step 3 — Overlay (RR) | [03-overlay-rr.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/steps/03-overlay-rr.md) |
-| Verify checklist | [verify.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/verify.md) |
-
-Steps 1, 2, 4, 5 are identical to lab 01 — only the overlay (Step 3) changes.
+👉 **[Complete guide → labs/02-ospf-ibgp-rr/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/README.md)**
 
 ```bash
-./scripts/apply.sh 02-ospf-ibgp-rr all    # build the RR fabric
+./scripts/deploy.sh 02-ospf-ibgp-rr && ./scripts/apply.sh 02-ospf-ibgp-rr all
 ```
 
 ## Planned
@@ -58,12 +40,6 @@ Steps 1, 2, 4, 5 are identical to lab 01 — only the overlay (Step 3) changes.
 | 04  | eBGP  | iBGP-EVPN (RR) | 📋 planned |
 | 05  | eBGP  | eBGP-EVPN | 📋 planned |
 
-## Running a lab
+Each will be a full self-contained guide like the two above.
 
-```bash
-./scripts/deploy.sh 01-ospf-ibgp    # boot the bare fabric (~5-8 min/node)
-./scripts/switch.sh 01-ospf-ibgp    # push the full working config
-./scripts/reset.sh  01-ospf-ibgp    # destroy + redeploy clean
-```
-
-See the [Quickstart](quickstart/intro.md) for the full team workflow.
+See the [Quickstart](quickstart/intro.md) for the team workflow.

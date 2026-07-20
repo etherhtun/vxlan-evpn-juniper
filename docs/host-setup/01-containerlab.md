@@ -124,12 +124,12 @@ From the repo root (`~/vxlan-evpn-juniper`):
 ```
 First boot is slow — **~5–8 min per vJunos node**. Watch one boot:
 ```bash
-docker logs -f clab-vxlan-evpn-jnpr-spine1
+docker logs -f clab-evpn-fullmesh-spine1
 ```
 When it settles, list the lab and SSH into a node:
 ```bash
 containerlab inspect -t labs/01-ospf-ibgp/topology.clab.yml
-ssh admin@clab-vxlan-evpn-jnpr-spine1        # confirm creds on first login
+ssh admin@clab-evpn-fullmesh-spine1        # confirm creds on first login
 ```
 > This is exactly when you resolve the repo's `NOTE/TODO` markers: the real
 > login user/password, and the `ethN → et-/xe-/ge-` interface mapping
@@ -149,4 +149,4 @@ ssh admin@clab-vxlan-evpn-jnpr-spine1        # confirm creds on first login
 ---
 
 Next: back to [lab 01](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md)
-— deploy the bare fabric and work through `steps/01 → 05`.
+— deploy the bare fabric and work through the complete guide.

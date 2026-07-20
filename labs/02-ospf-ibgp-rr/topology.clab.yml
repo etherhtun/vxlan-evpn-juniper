@@ -1,4 +1,4 @@
-name: vxlan-evpn-jnpr
+name: evpn-rr
 
 # Lab 01 — OSPF underlay + iBGP-EVPN (leaf-to-leaf full mesh).
 #
