@@ -1,7 +1,8 @@
-# The Course — session by session
+# Course 1: VXLAN-EVPN on Juniper
 
-A structured, zero-to-hero path to VXLAN-EVPN on Juniper. Each **session** follows
-the same teaching rhythm:
+A structured, zero-to-hero path to VXLAN-EVPN on Juniper, **session by session**.
+(A [Course 2 on Cisco](../index.md) is planned.) Each **session** follows the same
+teaching rhythm:
 
 1. **Mental model** — an analogy to anchor the idea.
 2. **Why before how** — the problem this session solves, before any config.

@@ -41,10 +41,13 @@ graph TB
 L2VNI · anycast gateway · multi-tenancy · ESI multihoming · external connectivity
 · multi-site.
 
-### 🔜 More courses
+### 🔜 Course 2 — VXLAN-EVPN on Cisco &nbsp; *(planned)*
 
-Coming as NetForge grows — e.g. EVPN on other NOSes, segment routing, automation.
-The platform is built to add courses without reshaping what's here.
+The same fabric concepts on **Cisco Nexus** (NX-OS) — so you can compare the two
+vendors side by side. Coming after Course 1's sessions are complete.
+
+*Further out:* segment routing, EVPN multihoming deep-dives, automation. The
+platform is built to add courses without reshaping what's here.
 
 ---
 

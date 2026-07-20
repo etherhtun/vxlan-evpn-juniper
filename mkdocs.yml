@@ -30,7 +30,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Course:
+  - "Course 1: VXLAN-EVPN":
     - Overview: sessions/index.md
     - 1 · Underlay (OSPF): sessions/01-underlay.md
   - Study (quick concepts):
