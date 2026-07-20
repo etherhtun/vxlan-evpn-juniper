@@ -31,6 +31,7 @@ nav:
     - Overview: sessions/index.md
     - 1 · Underlay (OSPF): sessions/01-underlay.md
     - 2 · Overlay (iBGP-EVPN + RR): sessions/02-overlay-rr.md
+    - 3 · L2VNI (stretch a VLAN): sessions/03-l2vni.md
   - Study (quick concepts):
     - Start here: study/index.md
     - 1 · Why VXLAN-EVPN?: study/01-why-vxlan-evpn.md
