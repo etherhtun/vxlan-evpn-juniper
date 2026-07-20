@@ -28,13 +28,40 @@ if [ ! -f "$TOPOLOGY" ]; then
   exit 1
 fi
 
+PREFIX="$(grep -m1 '^name:' "$TOPOLOGY" | awk '{print $2}')"
+
+# ── Pre-flight: refuse to run if ANOTHER fabric is already up ──
+# A 2x2 vJunos fabric needs ~16 GB RAM; two at once starve the host and boot
+# 'unhealthy'. Only one lab may run at a time.
+OTHER="$(docker ps --format '{{.Names}}' 2>/dev/null | grep '^clab-' | grep -v "^clab-${PREFIX}-" || true)"
+if [ -n "$OTHER" ]; then
+  echo "ERROR: another fabric is already running — wipe it before deploying '$LAB'."
+  echo ""
+  echo "Running now:"
+  echo "$OTHER" | sed 's/^/  /'
+  echo ""
+  echo "Only ONE 2x2 vJunos fabric fits on this host. Clear it with:"
+  echo "  sudo docker rm -f \$(docker ps -aq --filter name=clab-)   # force-remove ALL clab containers"
+  echo "  # (or, if containerlab still tracks it: sudo containerlab destroy --all)"
+  echo ""
+  echo "Then re-run: ./scripts/deploy.sh $LAB"
+  exit 1
+fi
+
+# If THIS lab's containers already exist, that's a redeploy — reconfigure cleanly.
+RECONF=""
+if docker ps -a --format '{{.Names}}' 2>/dev/null | grep -q "^clab-${PREFIX}-"; then
+  echo "Note: '$LAB' containers already exist — redeploying with --reconfigure."
+  RECONF="--reconfigure"
+fi
+
 echo "Deploying lab: $LAB"
 echo "Topology:      $TOPOLOGY"
 echo ""
 echo "This takes several minutes — vJunos-switch needs ~5-8 min per node to boot."
 echo "Watch a node's boot progress in another terminal with:"
-echo "  docker logs -f clab-$(grep -m1 '^name:' "$TOPOLOGY" | awk '{print $2}')-spine1"
+echo "  docker logs -f clab-${PREFIX}-spine1"
 echo ""
 
 cd "$(dirname "$TOPOLOGY")"
-containerlab deploy -t "$(basename "$TOPOLOGY")"
+containerlab deploy -t "$(basename "$TOPOLOGY")" ${RECONF}

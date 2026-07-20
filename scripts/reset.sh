@@ -23,6 +23,18 @@ if [ ! -f "$TOPOLOGY" ]; then
   exit 1
 fi
 
+PREFIX="$(grep -m1 '^name:' "$TOPOLOGY" | awk '{print $2}')"
+
+# Pre-flight: refuse if a DIFFERENT lab's fabric is running (only one fits).
+OTHER="$(docker ps --format '{{.Names}}' 2>/dev/null | grep '^clab-' | grep -v "^clab-${PREFIX}-" || true)"
+if [ -n "$OTHER" ]; then
+  echo "ERROR: another fabric is running — wipe it before resetting '$LAB'."
+  echo "$OTHER" | sed 's/^/  /'
+  echo ""
+  echo "Clear it:  sudo docker rm -f \$(docker ps -aq --filter name=clab-)"
+  exit 1
+fi
+
 cd "$(dirname "$TOPOLOGY")"
 
 echo "Destroying current lab..."

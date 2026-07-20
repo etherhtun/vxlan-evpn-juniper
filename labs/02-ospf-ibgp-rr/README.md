@@ -58,9 +58,20 @@ leaf directly**. The spine never encapsulates a data packet.
 ## Before you start
 
 - Host set up — see [Host Setup](https://etherhtun.github.io/vxlan-evpn-juniper/host-setup/00-gcp-instance/).
-- **This lab runs on its own fabric** (`clab-evpn-rr-*`). Run **one lab at a
-  time** (a 2×2 vJunos fabric needs ~16 GB RAM). If another lab is running, wipe
-  it first: `./scripts/destroy.sh <that-lab>`.
+- This lab runs on its own fabric (`clab-evpn-rr-*`).
+
+**⚠️ Pre-flight — only ONE lab at a time.** A 2×2 vJunos fabric needs ~16 GB RAM;
+two at once starve the host and boot `unhealthy`. **Before deploying, check
+nothing else is running:**
+```bash
+docker ps --format '{{.Names}}' | grep '^clab-' || echo "clean — nothing running"
+```
+If anything shows, wipe it first:
+```bash
+sudo docker rm -f $(docker ps -aq --filter name=clab-)     # force-remove all clab containers
+```
+(`deploy.sh` and `reset.sh` also **refuse to start** if another fabric is up, so
+you can't hit this by accident — but checking first is good habit.)
 
 ## How to run it
 
