@@ -41,18 +41,17 @@ command -v sshpass >/dev/null 2>&1 || { echo "ERROR: install sshpass (sudo apt i
 
 PREFIX="$(grep -m1 '^name:' "$TOPOLOGY" | awk '{print $2}')"
 
-ssh_node() {   # ssh_node <container> <remote-cli-command>
-  sshpass -p "$LAB_PASS" ssh -tt \
-    -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-    -o LogLevel=ERROR -o ConnectTimeout=10 \
-    -o PreferredAuthentications=password "${LAB_USER}@$1" "$2" 2>&1
-}
+SSH_OPTS=(-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+          -o LogLevel=ERROR -o ConnectTimeout=8
+          -o PreferredAuthentications=password)
 
 # Wait until the node's Junos CLI answers (post-reset boot can take minutes).
+# Plain ssh (no -tt) + hard timeout so a stuck session can never hang us.
 wait_cli() {
   local c="$1" i
   for i in $(seq 1 40); do
-    if ssh_node "$c" "show system uptime" 2>/dev/null | grep -qi 'uptime\|current time'; then
+    if timeout 12 sshpass -p "$LAB_PASS" ssh "${SSH_OPTS[@]}" \
+         "${LAB_USER}@${c}" "show system uptime" >/dev/null 2>&1; then
       return 0
     fi
     sleep 3
@@ -68,16 +67,16 @@ push() {
   if ! docker inspect "$c" >/dev/null 2>&1; then echo "container not found"; return 0; fi
   if ! wait_cli "$c"; then echo "CLI not ready (boot still in progress?)"; return 0; fi
 
+  # -tt for the interactive load; `timeout` caps it so it can never hang.
   local out=""
   out=$( { echo "configure exclusive"
            echo "load set terminal"
            cat "$file"
            printf '\004'                 # Ctrl-D ends the terminal load
            echo "commit and-quit"
-         } | sshpass -p "$LAB_PASS" ssh -tt \
-               -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-               -o LogLevel=ERROR -o ConnectTimeout=10 \
-               -o PreferredAuthentications=password "${LAB_USER}@${c}" 2>&1 ) || true
+           echo "exit"                    # close operational CLI cleanly
+         } | timeout 90 sshpass -p "$LAB_PASS" ssh -tt "${SSH_OPTS[@]}" \
+               "${LAB_USER}@${c}" 2>&1 ) || true
 
   if echo "$out" | grep -qi 'commit complete'; then
     echo "committed"
