@@ -146,6 +146,27 @@ ssh admin@clab-evpn-fullmesh-spine1        # confirm creds on first login
 | Nodes boot but no mgmt SSH | Wait longer (Junos mgmt comes up late), then confirm creds; adjust `LAB_USER`/`LAB_PASS` for `switch.sh`. |
 | Out of disk during build | `.qcow2` + Docker layers are big — the 100 GB SSD disk from host setup 1 is sized for this. |
 
+## 9. 💰 Stop the VM when you're done (save cost)
+
+A GCP VM bills **by the second while it's running**. When you finish for the day,
+**stop it** — you keep the disk (image, repo, configs) and pay only for storage:
+
+```bash
+# from your laptop (or Cloud Shell):
+gcloud compute instances stop  clab-lab --zone=us-central1-a    # pause — cheap
+gcloud compute instances start clab-lab --zone=us-central1-a    # resume later
+gcloud compute instances delete clab-lab --zone=us-central1-a   # remove entirely
+```
+
+You can also **Stop** the instance from the Cloud Console (VM instances → ⋮ → Stop).
+
+> ⚠️ **A running containerlab fabric does NOT survive a VM stop/start.** After you
+> `start` the VM again, the vJunos containers are gone — re-run
+> `./scripts/deploy.sh <lab>` and rebuild with `./scripts/apply.sh <lab> all`. The
+> repo (guides, configs, scripts) is safe in git, so nothing is lost.
+
+Make this a habit — an idle running fabric is the main way lab costs sneak up.
+
 ---
 
 Next: back to [lab 01](../labs/lab-01-fullmesh.md)
