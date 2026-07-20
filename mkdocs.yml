@@ -35,6 +35,7 @@ nav:
     - 4 · L3VNI & anycast gateway: sessions/04-l3vni-anycast.md
     - 5 · Multi-tenancy: sessions/05-multitenancy.md
     - 6 · ESI multihoming: sessions/06-esi-multihoming.md
+    - 7 · eBGP designs: sessions/07-ebgp.md
   - Study (quick concepts):
     - Start here: study/index.md
     - 1 · Why VXLAN-EVPN?: study/01-why-vxlan-evpn.md
@@ -56,6 +57,7 @@ nav:
     - Lab 05 · ESI multihoming: labs/lab-05-esi.md
   - Reference:
     - IP addressing plan: reference/ipplan.md
+    - Validation runbook (drafts): reference/validation-runbook.md
     - Verification Cheatsheet: concepts/verify-cheatsheet.md
     - Team Quickstart: quickstart/intro.md
 
