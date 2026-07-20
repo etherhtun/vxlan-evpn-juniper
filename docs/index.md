@@ -68,5 +68,5 @@ refresher on one idea? Hit the [Study primers](study/index.md).
 3. Work session by session; each ends with a checkpoint you must pass.
 
 > Source, configs, and scripts live in the
-> [GitHub repo](https://github.com/etherhtun/vxlan-evpn-juniper). Never commit the
+> [GitHub repo](https://github.com/etherhtun/netforge-labs). Never commit the
 > vJunos image or credentials (see the repo's `.gitignore`).

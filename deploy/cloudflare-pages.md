@@ -15,7 +15,7 @@ they need your CF account, so you run them.
 
 1. **Cloudflare dashboard** → **Workers & Pages** → **Create** → **Pages** →
    **Connect to Git**.
-2. Authorize GitHub and pick the repo **`etherhtun/vxlan-evpn-juniper`**.
+2. Authorize GitHub and pick the repo **`etherhtun/netforge-labs`**.
 3. Set up the build:
 
    | Setting | Value |
@@ -44,7 +44,7 @@ cache automatically — updates show immediately.
 ## Notes
 
 - **GitHub Pages still works too.** The existing GitHub Actions workflow keeps
-  publishing to `etherhtun.github.io/vxlan-evpn-juniper`. Once Cloudflare Pages is
+  publishing to `etherhtun.github.io/netforge-labs`. Once Cloudflare Pages is
   your primary URL, you can disable that workflow (delete
   `.github/workflows/deploy-docs.yml`) or leave it as a backup.
 - **Custom domain (optional).** In the Pages project → **Custom domains** → add

@@ -110,15 +110,15 @@ The image build happened inside the **vrnetlab** repo. The labs live in a
 **separate** repo — clone it now:
 ```bash
 cd ~
-git clone https://github.com/etherhtun/vxlan-evpn-juniper.git
-cd vxlan-evpn-juniper
+git clone https://github.com/etherhtun/netforge-labs.git
+cd netforge-labs
 ls labs/                    # → 01-ospf-ibgp
 ```
 All the `./scripts/*` and `labs/*` commands below run from **this** directory.
 
 ## 7. Smoke test
 
-From the repo root (`~/vxlan-evpn-juniper`):
+From the repo root (`~/netforge-labs`):
 ```bash
 ./scripts/deploy.sh 01-ospf-ibgp
 ```
@@ -148,5 +148,5 @@ ssh admin@clab-evpn-fullmesh-spine1        # confirm creds on first login
 
 ---
 
-Next: back to [lab 01](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md)
+Next: back to [lab 01](https://github.com/etherhtun/netforge-labs/blob/main/labs/01-ospf-ibgp/README.md)
 — deploy the bare fabric and work through the complete guide.

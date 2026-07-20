@@ -1,7 +1,7 @@
 # Lab 01 — OSPF underlay + iBGP-EVPN (full mesh)
 
 > **Complete, self-contained guide.** Build a working VXLAN-EVPN fabric from bare
-> vJunos switches, one layer at a time. Read [the Study track](https://etherhtun.github.io/vxlan-evpn-juniper/study/)
+> vJunos switches, one layer at a time. Read [the Study track](https://etherhtun.github.io/netforge-labs/study/)
 > first for the theory; this lab is the hands-on part.
 >
 > ✅ Validated end-to-end on vJunos-switch 23.2R1.14.
@@ -58,7 +58,7 @@ graph TB
 ## Before you start
 
 - Host set up (GCP + containerlab + vJunos image) — see
-  [Host Setup](https://etherhtun.github.io/vxlan-evpn-juniper/host-setup/00-gcp-instance/).
+  [Host Setup](https://etherhtun.github.io/netforge-labs/host-setup/00-gcp-instance/).
 - This lab runs on its own fabric (`clab-evpn-fullmesh-*`).
 
 **⚠️ Pre-flight — only ONE lab at a time.** A 2×2 vJunos fabric needs ~16 GB RAM;

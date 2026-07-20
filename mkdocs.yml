@@ -1,8 +1,8 @@
 site_name: NetForge Labs
 site_description: Learn networking by building it — hands-on, lab-driven courses. Course 1 - VXLAN-EVPN on Juniper.
 site_author: etherhtun
-repo_url: https://github.com/etherhtun/vxlan-evpn-juniper
-repo_name: vxlan-evpn-juniper
+repo_url: https://github.com/etherhtun/netforge-labs
+repo_name: netforge-labs
 edit_uri: edit/main/
 
 theme:

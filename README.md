@@ -8,7 +8,7 @@ A hands-on, layer-by-layer learning path for building VXLAN-EVPN fabrics on
 > overlay, then services — because that is the order in which it actually
 > becomes real.
 
-**📖 [Read the full docs](https://etherhtun.github.io/vxlan-evpn-juniper/)** —
+**📖 [Read the full docs](https://etherhtun.github.io/netforge-labs/)** —
 hosted on GitHub Pages, searchable, with inline code snippets and verification
 checklists.
 

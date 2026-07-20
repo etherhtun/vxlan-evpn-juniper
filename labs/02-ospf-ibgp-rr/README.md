@@ -3,7 +3,7 @@
 > **Complete, self-contained guide.** The **production** VXLAN-EVPN design. Same
 > 2×2 fabric as [lab 01](../01-ospf-ibgp/README.md), but the overlay scales:
 > leaves peer only to the spines, and the spines reflect EVPN routes between them.
-> Read [the Study track](https://etherhtun.github.io/vxlan-evpn-juniper/study/) first.
+> Read [the Study track](https://etherhtun.github.io/netforge-labs/study/) first.
 
 **Why this is the production design:** full-mesh iBGP (lab 01) needs N×(N-1)/2
 sessions — fine for 2 leaves, unmanageable at 20. Real fabrics make the **spines
@@ -57,7 +57,7 @@ leaf directly**. The spine never encapsulates a data packet.
 
 ## Before you start
 
-- Host set up — see [Host Setup](https://etherhtun.github.io/vxlan-evpn-juniper/host-setup/00-gcp-instance/).
+- Host set up — see [Host Setup](https://etherhtun.github.io/netforge-labs/host-setup/00-gcp-instance/).
 - This lab runs on its own fabric (`clab-evpn-rr-*`).
 
 **⚠️ Pre-flight — only ONE lab at a time.** A 2×2 vJunos fabric needs ~16 GB RAM;

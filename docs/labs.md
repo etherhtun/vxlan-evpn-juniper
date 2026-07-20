@@ -14,7 +14,7 @@ The **foundational** lab (validated on vJunos-switch 23.2R1.14). The simplest
 overlay — leaves peer directly — so you see EVPN in its clearest form. Fabric:
 `clab-evpn-fullmesh-*`.
 
-👉 **[Complete guide → labs/01-ospf-ibgp/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md)**
+👉 **[Complete guide → labs/01-ospf-ibgp/README.md](https://github.com/etherhtun/netforge-labs/blob/main/labs/01-ospf-ibgp/README.md)**
 
 ```bash
 ./scripts/deploy.sh 01-ospf-ibgp && ./scripts/apply.sh 01-ospf-ibgp all
@@ -26,7 +26,7 @@ The **production** overlay: leaves peer only to the spines; spines reflect EVPN
 routes (control-plane only — **not** VTEPs). Full-mesh (lab 01) doesn't scale
 past a few leaves; this does. Fabric: `clab-evpn-rr-*`.
 
-👉 **[Complete guide → labs/02-ospf-ibgp-rr/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/README.md)**
+👉 **[Complete guide → labs/02-ospf-ibgp-rr/README.md](https://github.com/etherhtun/netforge-labs/blob/main/labs/02-ospf-ibgp-rr/README.md)**
 
 ```bash
 ./scripts/deploy.sh 02-ospf-ibgp-rr && ./scripts/apply.sh 02-ospf-ibgp-rr all

@@ -123,14 +123,14 @@ graph TB
 ```
 
 **Deploy the fabric and drive the lab:** this session builds the underlay portion
-of [Lab 01](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md).
+of [Lab 01](https://github.com/etherhtun/netforge-labs/blob/main/labs/01-ospf-ibgp/README.md).
 ```bash
 ./scripts/deploy.sh 01-ospf-ibgp
 ./scripts/apply.sh  01-ospf-ibgp 01     # Step 1: interfaces + loopbacks
 ./scripts/apply.sh  01-ospf-ibgp 02     # Step 2: OSPF
 ```
 
-**Config, explained — leaf1** (every node in [Lab 01](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/01-ospf-ibgp/README.md)):
+**Config, explained — leaf1** (every node in [Lab 01](https://github.com/etherhtun/netforge-labs/blob/main/labs/01-ospf-ibgp/README.md)):
 ```
 set interfaces ge-0/0/0 unit 0 family inet address 10.10.1.1/31   # link to spine1
 set interfaces ge-0/0/1 unit 0 family inet address 10.10.3.1/31   # link to spine2
