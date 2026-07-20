@@ -149,16 +149,25 @@ ssh admin@clab-evpn-fullmesh-spine1        # confirm creds on first login
 ## 9. 💰 Stop the VM when you're done (save cost)
 
 A GCP VM bills **by the second while it's running**. When you finish for the day,
-**stop it** — you keep the disk (image, repo, configs) and pay only for storage:
+**stop it** — you keep the disk (image, repo, configs) and pay only for storage.
 
+**Easiest — from inside the VM itself** (where you already are):
 ```bash
-# from your laptop (or Cloud Shell):
-gcloud compute instances stop  clab-lab --zone=us-central1-a    # pause — cheap
-gcloud compute instances start clab-lab --zone=us-central1-a    # resume later
+sudo poweroff        # (or: sudo shutdown -h now)
+```
+The guest OS shuts down, GCP marks the instance **TERMINATED**, and compute billing
+stops. Your SSH session drops — that's expected. To turn it back on, use the
+Console or `gcloud … start` below.
+
+**From your laptop or Cloud Shell** (NOT from inside the VM — the VM's service
+account lacks permission and you'll get `insufficient authentication scopes`):
+```bash
+gcloud compute instances stop   clab-lab --zone=us-central1-a   # pause — cheap
+gcloud compute instances start  clab-lab --zone=us-central1-a   # resume later
 gcloud compute instances delete clab-lab --zone=us-central1-a   # remove entirely
 ```
 
-You can also **Stop** the instance from the Cloud Console (VM instances → ⋮ → Stop).
+Or use the **Cloud Console:** VM instances → **⋮ → Stop / Start**.
 
 > ⚠️ **A running containerlab fabric does NOT survive a VM stop/start.** After you
 > `start` the VM again, the vJunos containers are gone — re-run
