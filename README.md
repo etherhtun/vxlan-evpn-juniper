@@ -78,11 +78,12 @@ layer* — you never debug the whole stack at once.
 To completely wipe a running fabric (destroy the containers, leave nothing up):
 
 ```bash
-containerlab destroy -t labs/01-ospf-ibgp/topology.clab.yml --cleanup
-#   (prefix with sudo if you hit a permissions error)
-
+./scripts/destroy.sh 01-ospf-ibgp      # wipe — no redeploy
 docker ps | grep clab                  # confirm nothing is left running
 ```
+
+(Under the hood that runs `containerlab destroy -t <topology> --cleanup`; add
+`sudo` if you hit a permissions error.)
 
 > **Note — all labs share one topology name** (`vxlan-evpn-jnpr`), so they use the
 > same 4 containers and only **one lab runs at a time**. You don't need to wipe
