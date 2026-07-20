@@ -31,17 +31,23 @@ theme:
 
 nav:
   - Home: index.md
-  - Quickstart:
-    - Introduction: quickstart/intro.md
+  - Study:
+    - Start here: study/index.md
+    - 1 · Why VXLAN-EVPN?: study/01-why-vxlan-evpn.md
+    - 2 · Underlay vs overlay: study/02-underlay-overlay.md
+    - 3 · VXLAN data plane: study/03-vxlan-dataplane.md
+    - 4 · EVPN control plane: study/04-evpn-controlplane.md
+    - 5 · Route types: study/05-route-types.md
+    - 6 · Packet walk: study/06-packet-walk.md
+    - Interview questions: study/interview-questions.md
   - Host Setup:
     - GCP Instance: host-setup/00-gcp-instance.md
     - Docker & containerlab: host-setup/01-containerlab.md
-  - Concepts:
-    - EVPN-VXLAN Primer: concepts/evpn-vxlan-primer.md
-    - Route Types: concepts/route-types.md
-    - Verification Cheatsheet: concepts/verify-cheatsheet.md
   - Labs:
     - Overview: labs.md
+  - Reference:
+    - Verification Cheatsheet: concepts/verify-cheatsheet.md
+    - Team Quickstart: quickstart/intro.md
 
 plugins:
   - search

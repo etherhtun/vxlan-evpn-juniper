@@ -54,7 +54,21 @@ graph TB
 
 ---
 
-## Quick start
+## Recommended path: study first, then lab
+
+!!! tip "Read the theory before you touch the lab"
+    The **[Study track](study/index.md)** is a short, ordered course — *why*
+    VXLAN-EVPN exists, the underlay/overlay model, the VXLAN data plane, the EVPN
+    control plane, route types, and a step-by-step packet walk. Read it first and
+    the lab configs stop being commands to paste and start being things you
+    understand. Then test yourself with the
+    **[interview questions](study/interview-questions.md)**.
+
+    **[→ Start the Study track](study/index.md)**
+
+---
+
+## Quick start (once you've studied)
 
 1. **Set up the host** (if you haven't already):
    - [GCP instance with nested virtualization](host-setup/00-gcp-instance.md)
@@ -92,7 +106,8 @@ layer* — you never debug the whole stack at once.
 
 ## Next steps
 
-- **New to EVPN?** Start with [Concepts — EVPN-VXLAN Primer](concepts/evpn-vxlan-primer.md).
+- **New to EVPN?** Start the [Study track](study/index.md) — theory first.
+- **Want to self-test?** [Interview questions](study/interview-questions.md).
 - **Host not ready yet?** Read [Host Setup](host-setup/00-gcp-instance.md).
 - **Ready to deploy?** Jump to the [Labs](labs.md) page.
 

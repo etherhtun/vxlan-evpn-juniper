@@ -103,6 +103,6 @@ gcloud compute instances start clab-lab --zone=us-central1-a
 
 ## Questions?
 
-- **Lab concepts:** See [Concepts — EVPN-VXLAN Primer](../concepts/evpn-vxlan-primer.md)
+- **Lab concepts:** See the [Study track](../study/index.md)
 - **Show command reference:** [Verification Cheatsheet](../concepts/verify-cheatsheet.md)
 - **Troubleshooting:** Check the break-it exercises in each lab for failure modes
