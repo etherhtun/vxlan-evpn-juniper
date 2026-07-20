@@ -32,13 +32,31 @@ a working VXLAN-EVPN fabric from bare vJunos nodes, one layer at a time.
 ./scripts/apply.sh 01-ospf-ibgp all    # all steps 01→05
 ```
 
+## Lab 02 — OSPF underlay + iBGP-EVPN with spine route-reflectors ⭐ (production)
+
+Same fabric, **production overlay**: leaves peer only to the spines; spines
+reflect EVPN routes (control-plane only — **not** VTEPs). This is what you'd
+actually deploy — full-mesh (lab 01) doesn't scale past a few leaves.
+
+| Resource | Link |
+|----------|------|
+| Overview | [labs/02-ospf-ibgp-rr/README.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/README.md) |
+| Step 3 — Overlay (RR) | [03-overlay-rr.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/steps/03-overlay-rr.md) |
+| Verify checklist | [verify.md](https://github.com/etherhtun/vxlan-evpn-juniper/blob/main/labs/02-ospf-ibgp-rr/verify.md) |
+
+Steps 1, 2, 4, 5 are identical to lab 01 — only the overlay (Step 3) changes.
+
+```bash
+./scripts/apply.sh 02-ospf-ibgp-rr all    # build the RR fabric
+```
+
 ## Planned
 
 | Lab | Underlay | Overlay | Status |
 |-----|----------|---------|--------|
-| 02  | IS-IS | iBGP-EVPN | 📋 planned |
-| 03  | eBGP  | iBGP-EVPN | 📋 planned |
-| 04  | eBGP  | eBGP-EVPN | 📋 planned |
+| 03  | IS-IS | iBGP-EVPN (RR) | 📋 planned |
+| 04  | eBGP  | iBGP-EVPN (RR) | 📋 planned |
+| 05  | eBGP  | eBGP-EVPN | 📋 planned |
 
 ## Running a lab
 

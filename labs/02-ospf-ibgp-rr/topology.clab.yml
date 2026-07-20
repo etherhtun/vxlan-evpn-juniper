@@ -1,0 +1,41 @@
+name: vxlan-evpn-jnpr
+
+# Lab 01 — OSPF underlay + iBGP-EVPN (leaf-to-leaf full mesh).
+#
+# 2 spine × 2 leaf + 2 hosts. Extra leaf-leaf links are pre-cabled but unused
+# in lab 01 — later labs (peer-link / ESI) reuse them without re-cabling.
+#
+# NOTE (validate on first deploy):
+#   - image tag below is a placeholder — set it to the vJunos-switch image you
+#     built/loaded with vrnetlab (`docker images | grep vjunos`).
+#   - kind `juniper_vjunosswitch` is the containerlab native kind for
+#     vJunos-switch. Confirm your clab version supports it (`containerlab version`).
+
+topology:
+  kinds:
+    juniper_vjunosswitch:
+      image: vrnetlab/juniper_vjunos-switch:23.2R1.14   # TODO: set to your real image tag
+    linux:
+      image: alpine:latest
+
+  nodes:
+    spine1: { kind: juniper_vjunosswitch }
+    spine2: { kind: juniper_vjunosswitch }
+    leaf1:  { kind: juniper_vjunosswitch }
+    leaf2:  { kind: juniper_vjunosswitch }
+    host1:  { kind: linux }
+    host2:  { kind: linux }
+
+  links:
+    # ── Spine-leaf fabric (full mesh) ──
+    - endpoints: ["spine1:eth1", "leaf1:eth1"]   # link 1  10.10.1.0/31
+    - endpoints: ["spine1:eth2", "leaf2:eth1"]   # link 2  10.10.2.0/31
+    - endpoints: ["spine2:eth1", "leaf1:eth2"]   # link 3  10.10.3.0/31
+    - endpoints: ["spine2:eth2", "leaf2:eth2"]   # link 4  10.10.4.0/31
+
+    # ── Host attachments (single-homed) ──
+    - endpoints: ["leaf1:eth3", "host1:eth1"]
+    - endpoints: ["leaf2:eth3", "host2:eth1"]
+
+    # ── Reserved for later labs (peer-link etc.) — unused in lab 01 ──
+    - endpoints: ["leaf1:eth4", "leaf2:eth4"]
