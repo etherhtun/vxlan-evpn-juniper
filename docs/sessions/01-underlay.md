@@ -130,6 +130,21 @@ of [Lab 01](../labs/lab-01-fullmesh.md).
 ./scripts/apply.sh  01-ospf-ibgp 02     # Step 2: OSPF
 ```
 
+**Is the fabric ready?** vJunos takes ~5–8 min/node to boot. Check:
+```bash
+docker ps --filter "name=clab-evpn-fullmesh" --format "table {{.Names}}\t{{.Status}}"
+```
+Wait until all four switches show `(healthy)`. (You don't have to wait manually —
+`apply.sh` holds for each node's CLI before pushing.)
+
+**Prefer to skip the per-step learning and just build it?**
+```bash
+./scripts/apply.sh 01-ospf-ibgp all     # runs Steps 01→05 in order, one command
+```
+Steps are **cumulative** — each layer builds on the one below — so `all` applies
+them in order. You can run a single step (`apply.sh 01-ospf-ibgp 02`) only if the
+earlier steps are already applied.
+
 **Config, explained — leaf1** (every node in [Lab 01](../labs/lab-01-fullmesh.md)):
 ```
 set interfaces ge-0/0/0 unit 0 family inet address 10.10.1.1/31   # link to spine1
