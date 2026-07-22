@@ -7,8 +7,12 @@
 #
 # Examples:
 #   ./scripts/apply.sh 01-ospf-ibgp 01     # just Step 1 (fabric) on all its nodes
-#   ./scripts/apply.sh 01-ospf-ibgp 03     # Step 3 (overlay) on leaf1+leaf2
+#   ./scripts/apply.sh 01-ospf-ibgp 03     # just Step 3 (needs 01+02 already applied)
+#   ./scripts/apply.sh 01-ospf-ibgp 01-03  # Steps 01 through 03 in order (a range)
 #   ./scripts/apply.sh 01-ospf-ibgp all    # Steps 01→05 in order (full build)
+#
+# Steps are CUMULATIVE — each builds on the one below. To be "at" step N on a fresh
+# fabric, apply 01..N (use a range like 01-0N or 'all').
 #
 # Snippets are `set` format, sent directly as config-mode commands (additive),
 # so steps stack. For a guaranteed clean slate, use ./scripts/reset.sh first.
@@ -105,13 +109,21 @@ apply_step() {
 if [ "$STEP" = "all" ]; then
   STEPS=$(ls "$APPLY_DIR"/*.set 2>/dev/null | sed -E 's#.*/([0-9]+)-.*#\1#' | sort -u)
   for nn in $STEPS; do apply_step "$nn"; done
+elif [[ "$STEP" =~ ^[0-9]+-[0-9]+$ ]]; then
+  # Range, e.g. "01-03" — apply those steps in order (steps are cumulative, so the
+  # low end must include the prerequisites, i.e. start at 01 on a fresh fabric).
+  lo="${STEP%-*}"; hi="${STEP#*-}"
+  for n in $(seq "$((10#$lo))" "$((10#$hi))"); do apply_step "$(printf '%02d' "$n")"; done
 else
   apply_step "$(printf '%02d' "$((10#${STEP}))" 2>/dev/null || echo "$STEP")"
 fi
 
 echo ""
 echo "Done. Verify with the matching labs/${LAB}/steps/ doc."
-if [ "$STEP" = "05" ] || [ "$STEP" = "5" ] || [ "$STEP" = "all" ]; then
+case "$STEP" in
+  *05|5|all) HOST_HINT=1 ;; *) HOST_HINT="" ;;
+esac
+if [ -n "$HOST_HINT" ]; then
   cat <<HOSTS
 
 Step 5b — host IPs (run on the clab host shell, NOT the Junos CLI):

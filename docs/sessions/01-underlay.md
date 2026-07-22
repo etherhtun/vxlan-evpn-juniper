@@ -141,9 +141,13 @@ Wait until all four switches show `(healthy)`. (You don't have to wait manually 
 ```bash
 ./scripts/apply.sh 01-ospf-ibgp all     # runs Steps 01→05 in order, one command
 ```
-Steps are **cumulative** — each layer builds on the one below — so `all` applies
-them in order. You can run a single step (`apply.sh 01-ospf-ibgp 02`) only if the
-earlier steps are already applied.
+Steps are **cumulative** — each layer builds on the one below. To jump to a
+particular point, apply a **range** (which includes the prerequisites):
+```bash
+./scripts/apply.sh 01-ospf-ibgp 01-03   # steps 01 → 03 in order (e.g. up to the overlay)
+```
+A single step (`apply.sh 01-ospf-ibgp 03`) only works if the earlier steps are
+already applied — step 3 (BGP) needs the loopbacks (1) and underlay (2) first.
 
 **Config, explained — leaf1** (every node in [Lab 01](../labs/lab-01-fullmesh.md)):
 ```
