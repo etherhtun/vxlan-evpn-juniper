@@ -44,8 +44,8 @@ gcloud projects list
 
 # Set the active project and sensible defaults (so you can omit them later)
 gcloud config set project YOUR_PROJECT_ID
-gcloud config set compute/zone us-central1-a
-gcloud config set compute/region us-central1
+gcloud config set compute/zone asia-southeast1-b
+gcloud config set compute/region asia-southeast1
 ```
 Replace `YOUR_PROJECT_ID` with your real project ID (from the list above).
 
@@ -53,7 +53,7 @@ Replace `YOUR_PROJECT_ID` with your real project ID (from the list above).
 
 ```bash
 gcloud compute instances create clab-lab \
-  --zone=us-central1-a \
+  --zone=asia-southeast1-b \
   --machine-type=n2-standard-16 \
   --enable-nested-virtualization \
   --image-family=ubuntu-2404-lts-amd64 \
@@ -86,7 +86,7 @@ What each flag does:
 
 **SSH via gcloud (recommended — it manages keys for you):**
 ```bash
-gcloud compute ssh clab-lab --zone=us-central1-a
+gcloud compute ssh clab-lab --zone=asia-southeast1-b
 ```
 First run generates an SSH key and pushes it to the instance automatically.
 You'll land at an Ubuntu shell on the VM — this is where you run the
@@ -102,7 +102,7 @@ You'll land at an Ubuntu shell on the VM — this is where you run the
   gcloud compute config-ssh          # writes host entries to ~/.ssh/config
   ```
   Then in VS Code: **Remote-SSH: Connect to Host…** → pick
-  `clab-lab.us-central1-a.YOUR_PROJECT_ID`.
+  `clab-lab.asia-southeast1-b.YOUR_PROJECT_ID`.
 
 ## 6. Verify nested virtualization is really on
 
@@ -135,14 +135,41 @@ A 16-vCPU VM bills by the second while **running**. Stop it when you're done for
 the day (you keep the disk + configs, pay only for storage):
 
 ```bash
-gcloud compute instances stop  clab-lab --zone=us-central1-a   # pause (cheap)
-gcloud compute instances start clab-lab --zone=us-central1-a   # resume
-gcloud compute instances delete clab-lab --zone=us-central1-a  # remove entirely
+gcloud compute instances stop  clab-lab --zone=asia-southeast1-b   # pause (cheap)
+gcloud compute instances start clab-lab --zone=asia-southeast1-b   # resume
+gcloud compute instances delete clab-lab --zone=asia-southeast1-b  # remove entirely
 ```
 
 > ⚠️ A running containerlab fabric does **not** survive a VM stop/start — you'll
 > re-run `./scripts/deploy.sh` after starting. The repo (configs, steps) lives in
 > git, so nothing is lost.
+
+## 9. Moving the VM to another region
+
+If a zone runs out of capacity for your machine type (`VM instance is currently
+unavailable in the … zone` — common with larger types), recreate the VM elsewhere
+via a **machine image**. This preserves everything on the disk — the built vJunos
+image, the repo, and configs — so you **don't re-download or rebuild the Juniper
+OS**:
+
+```bash
+# 1. capture the (stopped) VM as a machine image
+gcloud compute machine-images create clab-lab-img \
+  --source-instance=clab-lab --source-instance-zone=<old-zone>
+
+# 2. recreate in the new zone, keeping nested virtualization
+gcloud compute instances create clab-lab \
+  --zone=asia-southeast1-b \
+  --source-machine-image=clab-lab-img \
+  --machine-type=n2-standard-8 \
+  --enable-nested-virtualization
+
+# 3. verify it's good, then delete the old VM + image (stop double-billing)
+gcloud compute instances delete clab-lab --zone=<old-zone>
+gcloud compute machine-images delete clab-lab-img
+```
+The Juniper OS travels with the disk — confirm on the new VM with
+`docker images | grep vjunos` and `grep -cw vmx /proc/cpuinfo` (nested virt on).
 
 ---
 

@@ -53,7 +53,7 @@ up (or download directly on the VM if you have a signed URL):
 ```bash
 # from your laptop:
 gcloud compute scp ~/Downloads/vJunos-switch-23.2R1.14.qcow2 \
-    clab-lab:~/ --zone=us-central1-a
+    clab-lab:~/ --zone=asia-southeast1-b
 ```
 > 🔒 The `.qcow2` is licensed — keep it on the VM only. It's already in
 > `.gitignore`; **never commit it**.
@@ -162,9 +162,9 @@ Console or `gcloud … start` below.
 **From your laptop or Cloud Shell** (NOT from inside the VM — the VM's service
 account lacks permission and you'll get `insufficient authentication scopes`):
 ```bash
-gcloud compute instances stop   clab-lab --zone=us-central1-a   # pause — cheap
-gcloud compute instances start  clab-lab --zone=us-central1-a   # resume later
-gcloud compute instances delete clab-lab --zone=us-central1-a   # remove entirely
+gcloud compute instances stop   clab-lab --zone=asia-southeast1-b   # pause — cheap
+gcloud compute instances start  clab-lab --zone=asia-southeast1-b   # resume later
+gcloud compute instances delete clab-lab --zone=asia-southeast1-b   # remove entirely
 ```
 
 Or use the **Cloud Console:** VM instances → **⋮ → Stop / Start**.

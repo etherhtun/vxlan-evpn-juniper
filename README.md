@@ -97,7 +97,7 @@ docker ps | grep clab                  # confirm nothing is left running
 **Stop the GCP VM** when you're done for the day (the fabric does not survive a
 VM stop/start — you re-run `deploy.sh` after starting it again):
 ```bash
-gcloud compute instances stop clab-lab --zone=us-central1-a
+gcloud compute instances stop clab-lab --zone=asia-southeast1-b
 ```
 
 ## ⚠️ Do not commit

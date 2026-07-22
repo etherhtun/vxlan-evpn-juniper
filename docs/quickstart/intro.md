@@ -8,7 +8,7 @@ Here's how to start practicing.
 ## SSH to the host
 
 ```bash
-gcloud compute ssh clab-lab --zone=us-central1-a
+gcloud compute ssh clab-lab --zone=asia-southeast1-b
 ```
 (Adjust the zone if your host is elsewhere.)
 
@@ -90,12 +90,12 @@ open in Wireshark.
 Stop the GCP host to save cost (lab data persists):
 ```bash
 # on your laptop:
-gcloud compute instances stop clab-lab --zone=us-central1-a
+gcloud compute instances stop clab-lab --zone=asia-southeast1-b
 ```
 
 Start it again later:
 ```bash
-gcloud compute instances start clab-lab --zone=us-central1-a
+gcloud compute instances start clab-lab --zone=asia-southeast1-b
 ```
 
 ---
