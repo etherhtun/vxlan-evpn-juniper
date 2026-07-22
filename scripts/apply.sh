@@ -49,6 +49,8 @@ SSH_OPTS=(-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
           -o LogLevel=ERROR -o ConnectTimeout=8
           -o PreferredAuthentications=password)
 
+FAILED=()   # nodes whose commit did not persist (populated by push)
+
 # Wait until the node's Junos CLI answers (post-reset boot can take minutes).
 # Plain ssh (no -tt) + hard timeout so a stuck session can never hang us.
 wait_cli() {
@@ -63,35 +65,46 @@ wait_cli() {
   return 1
 }
 
-# Push one node's snippet: load set terminal + commit.
+# One config push: set lines directly in config mode (no load-set-terminal/^D).
+do_push() {
+  local c="$1" file="$2"
+  { echo "configure"
+    echo "rollback 0"
+    grep -E '^(set|delete|deactivate|activate) ' "$file"
+    echo "commit and-quit"
+    echo "exit"
+  } | timeout 90 sshpass -p "$LAB_PASS" ssh -tt "${SSH_OPTS[@]}" \
+        "${LAB_USER}@${c}" 2>&1
+}
+
+# ⭐ Verify a step actually PERSISTED (guards against silent commit loss on a
+# loaded VM). Checks the running config for the step's first `set` statement.
+verify_committed() {
+  local c="$1" marker="$2"
+  [ -n "$marker" ] || return 0
+  timeout 20 sshpass -p "$LAB_PASS" ssh "${SSH_OPTS[@]}" "${LAB_USER}@${c}" \
+    "show configuration | display set | match \"$marker\"" 2>/dev/null | grep -qF "$marker"
+}
+
+# Push one node's snippet, verify it landed, retry once, else record failure.
 push() {
   local node="$1" file="$2"
   local c="clab-${PREFIX}-${node}"
   echo -n "    $node ... "
-  if ! docker inspect "$c" >/dev/null 2>&1; then echo "container not found"; return 0; fi
-  if ! wait_cli "$c"; then echo "CLI not ready (boot still in progress?)"; return 0; fi
+  if ! docker inspect "$c" >/dev/null 2>&1; then echo "container not found"; FAILED+=("$node"); return 0; fi
+  if ! wait_cli "$c"; then echo "CLI not ready (boot still in progress?)"; FAILED+=("$node"); return 0; fi
 
-  # Send `set` lines directly as config-mode commands — no `load set terminal`,
-  # no Ctrl-D (which doesn't survive the ssh pty). rollback 0 clears any stale
-  # candidate from a prior aborted run. timeout caps it so it can't hang.
-  local out=""
-  out=$( { echo "configure"
-           echo "rollback 0"
-           grep -E '^(set|delete|deactivate|activate) ' "$file"
-           echo "commit and-quit"
-           echo "exit"
-         } | timeout 90 sshpass -p "$LAB_PASS" ssh -tt "${SSH_OPTS[@]}" \
-               "${LAB_USER}@${c}" 2>&1 ) || true
+  local marker; marker="$(grep -m1 '^set ' "$file" | sed 's/^set //')"
+  local out; out="$(do_push "$c" "$file")" || true
+  if verify_committed "$c" "$marker"; then echo "committed"; return 0; fi
 
-  if echo "$out" | grep -qi 'commit complete'; then
-    echo "committed"
-  elif echo "$out" | grep -qiE 'error:|syntax error|unknown command|missing argument'; then
-    echo "ERROR:"
-    echo "$out" | grep -iE 'error:|syntax error|unknown command|missing argument' | sed 's/^/        /' | head -5
-  else
-    echo "CHECK — no 'commit complete' seen:"
-    echo "$out" | sed 's/^/        /' | tail -10
-  fi
+  # Not persisted — one retry (common under transient load).
+  out="$(do_push "$c" "$file")" || true
+  if verify_committed "$c" "$marker"; then echo "committed (retry)"; return 0; fi
+
+  echo "FAILED — commit did not persist:"
+  echo "$out" | grep -iE 'error|constraint|commit' | sed 's/^/        /' | tail -6
+  FAILED+=("$node")
 }
 
 # Apply one step number (e.g. "01") — every <NN>-<node>.set for it.
@@ -119,6 +132,15 @@ else
 fi
 
 echo ""
+if [ "${#FAILED[@]}" -gt 0 ]; then
+  # de-duplicate the failed list
+  UNIQ_FAILED="$(printf '%s\n' "${FAILED[@]}" | sort -u | tr '\n' ' ')"
+  echo "❌ FAILED to persist config on: ${UNIQ_FAILED}"
+  echo "   Re-run this command (idempotent), or: ./scripts/reset.sh ${LAB} && ./scripts/apply.sh ${LAB} all"
+  echo "   Repeated failures usually mean the host is low on RAM — check 'free -h' on the"
+  echo "   clab host; a 2x2 vJunos fabric wants a VM with plenty of headroom (≥ n2-standard-16)."
+  echo ""
+fi
 echo "Done. Verify with the matching labs/${LAB}/steps/ doc."
 case "$STEP" in
   *05|5|all) HOST_HINT=1 ;; *) HOST_HINT="" ;;
