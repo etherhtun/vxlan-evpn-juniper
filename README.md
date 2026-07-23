@@ -73,6 +73,21 @@ layer* — you never debug the whole stack at once.
 ./scripts/reset.sh  01-ospf-ibgp       # destroy + redeploy clean
 ```
 
+## Iterating without a reboot ⚡
+
+vJunos nodes are slow to boot, so **don't `reset` to start over** — reset destroys
+and reboots the containers (many minutes). Instead:
+
+```bash
+./scripts/clean.sh 01-ospf-ibgp        # wipe CONFIG to baseline (~30s, no reboot)
+./scripts/apply.sh 01-ospf-ibgp all    # reconfigure from scratch
+```
+
+`clean.sh` deletes everything the lab added and keeps the mgmt user, so you get a
+blank fabric in seconds. Boot the fabric **once** per session (`deploy.sh`), then
+`clean` + `apply` as many times as you like. Only use `reset.sh` when a node is
+genuinely wedged and needs fresh containers.
+
 ## Tearing down / wiping a lab
 
 To completely wipe a running fabric (destroy the containers, leave nothing up):

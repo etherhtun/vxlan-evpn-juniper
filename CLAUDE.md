@@ -33,7 +33,9 @@ docs/                 ALL portal content (rendered by MkDocs). Everything a lear
   quickstart/         team quickstart
 labs/<NN-name>/       RUNNABLE files only: topology.clab.yml, apply/*.set, configs/*.conf
                       README.md is a SHORT pointer to the portal guide (no full content)
-scripts/              deploy · apply · switch · reset · destroy · capture
+scripts/              deploy · apply · switch · clean · reset · destroy · capture
+                      (clean = wipe config to baseline, NO reboot — for iterating
+                       within a running lab; far cheaper than reset)
 common/ipplan.md      canonical addressing (mirrored to docs/reference/ipplan.md)
 deploy/               cloudflare-pages.md (hosting setup)
 mkdocs.yml · requirements.txt · .python-version
