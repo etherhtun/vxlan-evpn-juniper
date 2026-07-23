@@ -32,13 +32,19 @@ nav:
     - 1 · Underlay (OSPF): sessions/01-underlay.md
     - 2 · Overlay (iBGP-EVPN + RR): sessions/02-overlay-rr.md
     - 3 · L2VNI (stretch a VLAN): sessions/03-l2vni.md
+    - "🧪 Lab 01 · Full mesh (sessions 1–3)": labs/lab-01-fullmesh.md
+    - "🧪 Lab 02 · Route reflectors (session 2)": labs/lab-02-rr.md
     - 4 · L3VNI & anycast gateway: sessions/04-l3vni-anycast.md
+    - "🧪 Lab 03 · L3VNI + anycast GW": labs/lab-03-l3vni.md
     - 5 · Multi-tenancy: sessions/05-multitenancy.md
+    - "🧪 Lab 04 · Multi-tenancy": labs/lab-04-multitenancy.md
     - 6 · ESI multihoming: sessions/06-esi-multihoming.md
+    - "🧪 Lab 05 · ESI multihoming": labs/lab-05-esi.md
     - 7 · eBGP designs: sessions/07-ebgp.md
     - 8 · External connectivity (L3 out): sessions/08-l3out.md
     - 9 · Multi-site / DCI: sessions/09-multisite.md
     - 10 · Production hardening: sessions/10-production-hardening.md
+    - All labs (overview): labs.md
   - Study (quick concepts):
     - Start here: study/index.md
     - 1 · Why VXLAN-EVPN?: study/01-why-vxlan-evpn.md
@@ -51,13 +57,6 @@ nav:
   - Host Setup:
     - GCP Instance: host-setup/00-gcp-instance.md
     - Docker & containerlab: host-setup/01-containerlab.md
-  - Labs:
-    - Overview: labs.md
-    - Lab 01 · Full mesh: labs/lab-01-fullmesh.md
-    - Lab 02 · Route reflectors: labs/lab-02-rr.md
-    - Lab 03 · L3VNI + anycast GW: labs/lab-03-l3vni.md
-    - Lab 04 · Multi-tenancy: labs/lab-04-multitenancy.md
-    - Lab 05 · ESI multihoming: labs/lab-05-esi.md
   - Reference:
     - IP addressing plan: reference/ipplan.md
     - Validation runbook (drafts): reference/validation-runbook.md
