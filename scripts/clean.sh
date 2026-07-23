@@ -53,15 +53,20 @@ delete protocols bgp
 delete protocols evpn
 delete switch-options
 delete vlans
-delete routing-instances
+delete routing-instances TENANT
+delete routing-instances TENANT-A
+delete routing-instances TENANT-B
 delete routing-options router-id
 delete routing-options autonomous-system
 delete routing-options graceful-restart
 delete policy-options
 delete chassis aggregated-devices
 delete forwarding-options storm-control-profiles
-delete firewall
+delete firewall filter PROTECT-RE
 EOF
+# NOTE: we delete only the labs' NAMED routing-instances and firewall filter —
+# NEVER 'delete routing-instances' or 'delete firewall' wholesale, which would
+# remove the management routing-instance / mgmt filters and break SSH.
 
 # Discover switch nodes from configs/ (Linux hosts have no .conf → skipped).
 NODES=()
